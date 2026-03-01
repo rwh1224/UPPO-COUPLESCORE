@@ -5,165 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>최고의 궁합 찾기</title>
     <style>
-        :root {
-            --primary-color: #ff6b6b;
-            --secondary-color: #4ecdc4;
-            --bg-color: #f7f9fc;
-        }
-
-        body {
-            font-family: 'Pretendard', sans-serif;
-            background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        h1 { color: #333; font-size: 1.5rem; margin-bottom: 1.5rem; }
-        .sub-title { color: #666; font-size: 0.9rem; margin-top: -1rem; margin-bottom: 2rem; }
-
-        .input-group {
-            background: #fff5f5;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            border: 1px solid #ffe3e3;
-        }
-
-        input {
-            width: calc(100% - 20px);
-            padding: 12px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus { border-color: var(--primary-color); }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        button:hover { background: #ff5252; transform: translateY(-2px); }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-
-        #result-section {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 15px;
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .score-circle {
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            border-radius: 50%;
-            background: var(--secondary-color);
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .loading { display: none; margin-bottom: 10px; color: #ff6b6b; font-weight: bold; }
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #ff6b6b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #loading { display: none; color: #ff6b6b; margin: 10px 0; font-size: 14px; }
+        /* 결과창 디자인 */
+        #result-section { display: none; margin-top: 20px; padding: 20px; border-top: 2px dashed #ff6b6b; }
+        .score { font-size: 40px; color: #ff6b6b; font-weight: bold; margin: 10px 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>💕 궁합 메이커</h1>
-    <p class="sub-title">당신과 최고의 궁합을 가진 사람을 찾아보세요!</p>
-
+    <h2>💕 궁합 탐지기</h2>
+    <p>당신과 최고의 궁합을 가진 사람을 찾아보세요!</p>
+    
     <div id="input-section">
-        <div class="input-group">
-            <input type="text" id="nick1" placeholder="나의 닉네임">
-            <input type="text" id="like1" placeholder="내가 좋아하는 것">
-        </div>
-        <div class="input-group">
-            <input type="text" id="nick2" placeholder="상대의 닉네임">
-            <input type="text" id="like2" placeholder="상대가 좋아하는 것">
-        </div>
-        <div id="loading" class="loading">제미나이가 궁합을 분석 중...</div>
-        <button id="btn" onclick="checkCompatibility()">분석 시작!</button>
+        <input type="text" id="nick1" placeholder="내 닉네임">
+        <input type="text" id="like1" placeholder="내가 좋아하는 것">
+        <hr>
+        <input type="text" id="nick2" placeholder="상대 닉네임">
+        <input type="text" id="like2" placeholder="상대가 좋아하는 것">
+        <div id="loading">제미나이가 분석 중...</div>
+        <button onclick="check()">분석 시작!</button>
     </div>
 
     <div id="result-section">
-        <div class="score-circle"><span id="res-score"></span></div>
-        <p id="res-desc" style="line-height: 1.6; color: #444;"></p>
-        <button onclick="location.reload()" style="background: #eee; color: #333; margin-top: 10px;">다시 하기</button>
+        <div class="score"><span id="res-score">0</span>점</div>
+        <p id="res-desc"></p>
+        <button onclick="location.reload()" style="background:#666">다시 하기</button>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLE8WivgI4lp1hrf_30lOEFbtiiOSL6XxLdgqpjiF67Io6PmRn7HWW4MKYLdFgdltL/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLE8WivgI4lp1hrf_30lOEFbtiiOSL6XxLdgqpjiF67Io6PmRn7HWW4MKYLdFgdltL/exec";
 
-    async function checkCompatibility() {
-        const nick1 = document.getElementById('nick1').value;
-        const like1 = document.getElementById('like1').value;
-        const nick2 = document.getElementById('nick2').value;
-        const like2 = document.getElementById('like2').value;
-        const btn = document.getElementById('btn');
-        const loading = document.getElementById('loading');
+    async function check() {
+        const data = {
+            nick1: document.getElementById('nick1').value,
+            like1: document.getElementById('like1').value,
+            nick2: document.getElementById('nick2').value,
+            like2: document.getElementById('like2').value
+        };
 
-        if(!nick1 || !like1 || !nick2 || !like2) {
-            alert("모든 칸을 채워주세요!");
-            return;
-        }
-
-        btn.disabled = true;
-        loading.style.display = 'block';
+        document.getElementById('loading').style.display = 'block';
 
         try {
-            const response = await fetch(SCRIPT_URL, {
+            const res = await fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: JSON.stringify({ nick1, like1, nick2, like2 })
+                body: JSON.stringify(data)
             });
-
-            const result = await response.json();
+            const result = await res.json();
 
             document.getElementById('input-section').style.display = 'none';
-            document.getElementById('result-section').style.display = 'block';
+            document.getElementById('result-section').style.display = 'block'; // 결과창 보여주기
             document.getElementById('res-score').innerText = result.score;
             document.getElementById('res-desc').innerText = result.description;
-
-        } catch (error) {
-            console.error(error);
-            alert("에러가 발생했습니다. 다시 시도해주세요.");
-            btn.disabled = false;
-            loading.style.display = 'none';
+        } catch (e) {
+            alert("연결 오류! 구글 앱스 스크립트 배포 설정을 확인하세요.");
         }
     }
 </script>
-
 </body>
 </html>
