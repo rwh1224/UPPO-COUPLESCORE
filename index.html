@@ -3,69 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>최고의 궁합 찾기</title>
+    <title>💕 최고의 궁합 찾기</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 350px; text-align: center; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #ff6b6b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #loading { display: none; color: #ff6b6b; margin: 10px 0; font-size: 14px; }
-        /* 결과창 디자인 */
-        #result-section { display: none; margin-top: 20px; padding: 20px; border-top: 2px dashed #ff6b6b; }
-        .score { font-size: 40px; color: #ff6b6b; font-weight: bold; margin: 10px 0; }
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --bg-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 { color: #333; margin-bottom: 10px; font-size: 24px; }
+        .sub-text { color: #777; font-size: 14px; margin-bottom: 30px; }
+
+        .input-box {
+            background: #fffafa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ffe3e3;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--primary-color); box-shadow: 0 0 5px rgba(255,107,107,0.2); }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover { background: #ee5253; transform: translateY(-2px); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+
+        #loading { display: none; margin: 20px 0; color: var(--primary-color); font-weight: bold; }
+
+        /* 결과 화면 디자인 */
+        #result-section {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .score-badge {
+            font-size: 50px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+
+        .description {
+            line-height: 1.6;
+            color: #444;
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>💕 궁합 탐지기</h2>
-    <p>당신과 최고의 궁합을 가진 사람을 찾아보세요!</p>
-    
+<div class="card">
+    <h1>💕 궁합 탐지기</h1>
+    <p class="sub-text">당신과 최고의 궁합을 가진 사람을 찾아보세요!</p>
+
     <div id="input-section">
-        <input type="text" id="nick1" placeholder="내 닉네임">
-        <input type="text" id="like1" placeholder="내가 좋아하는 것">
-        <hr>
-        <input type="text" id="nick2" placeholder="상대 닉네임">
-        <input type="text" id="like2" placeholder="상대가 좋아하는 것">
-        <div id="loading">제미나이가 분석 중...</div>
-        <button onclick="check()">분석 시작!</button>
+        <div class="input-box">
+            <input type="text" id="nick1" placeholder="내 닉네임">
+            <input type="text" id="like1" placeholder="내가 좋아하는 것">
+        </div>
+        <div class="input-box">
+            <input type="text" id="nick2" placeholder="상대방 닉네임">
+            <input type="text" id="like2" placeholder="상대방이 좋아하는 것">
+        </div>
+        <div id="loading">✨ 제미나이가 분석 중...</div>
+        <button id="submit-btn" onclick="startAnalysis()">분석 시작!</button>
     </div>
 
     <div id="result-section">
-        <div class="score"><span id="res-score">0</span>점</div>
-        <p id="res-desc"></p>
-        <button onclick="location.reload()" style="background:#666">다시 하기</button>
+        <div class="score-badge"><span id="res-score">0</span>점</div>
+        <p class="description" id="res-desc"></p>
+        <button onclick="location.reload()" style="background: #6c757d;">다시 하기</button>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLE8WivgI4lp1hrf_30lOEFbtiiOSL6XxLdgqpjiF67Io6PmRn7HWW4MKYLdFgdltL/exec";
+    // ⚠️ 중요: 아래 URL을 본인의 Google Apps Script 배포 URL(/exec로 끝나는 것)로 교체하세요!
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmyvtPoliUJwkFK3ZyRJ7KuNt3QAk6JI7Dv7_OP4JdcbBQV78K_8swsog2Lmchspco/exec";
 
-    async function check() {
-        const data = {
-            nick1: document.getElementById('nick1').value,
-            like1: document.getElementById('like1').value,
-            nick2: document.getElementById('nick2').value,
-            like2: document.getElementById('like2').value
+    async function startAnalysis() {
+        const nick1 = document.getElementById('nick1').value;
+        const like1 = document.getElementById('like1').value;
+        const nick2 = document.getElementById('nick2').value;
+        const like2 = document.getElementById('like2').value;
+        const btn = document.getElementById('submit-btn');
+        const loading = document.getElementById('loading');
+
+        if (!nick1 || !like1 || !nick2 || !like2) {
+            alert("모든 빈칸을 입력해주세요!");
+            return;
+        }
+
+        // 상태 업데이트
+        btn.disabled = true;
+        loading.style.display = 'block';
+
+        const payload = {
+            nick1: nick1,
+            like1: like1,
+            nick2: nick2,
+            like2: like2
         };
 
-        document.getElementById('loading').style.display = 'block';
-
         try {
-            const res = await fetch(SCRIPT_URL, {
+            // 구글 앱스 스크립트로 데이터 전송
+            const response = await fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: JSON.stringify(data)
+                body: JSON.stringify(payload)
             });
-            const result = await res.json();
 
+            const result = await response.json();
+
+            // 결과 화면 표시
             document.getElementById('input-section').style.display = 'none';
-            document.getElementById('result-section').style.display = 'block'; // 결과창 보여주기
+            document.getElementById('result-section').style.display = 'block';
+            
             document.getElementById('res-score').innerText = result.score;
             document.getElementById('res-desc').innerText = result.description;
-        } catch (e) {
-            alert("연결 오류! 구글 앱스 스크립트 배포 설정을 확인하세요.");
+
+        } catch (error) {
+            console.error("Error:", error);
+            alert("데이터를 가져오는 데 실패했습니다. Apps Script 배포 설정(모든 사용자 권한)을 확인해주세요.");
+            btn.disabled = false;
+            loading.style.display = 'none';
         }
     }
 </script>
+
 </body>
 </html>
