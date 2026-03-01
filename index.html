@@ -3,133 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💕 최고의 궁합 찾기</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>✨ Soulmate Matcher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #ff6b6b;
-            --secondary-color: #4ecdc4;
-            --bg-color: #f8f9fa;
+            --primary-grad: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            --roast-grad: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --bg-color: #f0f2f5;
+            --glass: rgba(255, 255, 255, 0.8);
         }
 
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Pretendard', sans-serif;
+            background: #eef1f5;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 107, 107, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(78, 205, 196, 0.15) 0px, transparent 50%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            overflow-x: hidden;
         }
 
+        /* 메인 카드 디자인 */
         .card {
-            background: white;
-            padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 50px 40px;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 450px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            position: relative;
         }
 
-        h1 { color: #333; margin-bottom: 10px; font-size: 24px; }
-        .sub-text { color: #777; font-size: 14px; margin-bottom: 30px; }
+        h1 { 
+            color: #1a1a1a; 
+            margin-bottom: 8px; 
+            font-size: 28px; 
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .sub-text { 
+            color: #64748b; 
+            font-size: 15px; 
+            margin-bottom: 35px;
+            font-weight: 400;
+        }
+
+        /* 입력창 디자인 */
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-left: 5px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
 
         .input-box {
-            background: #fffafa;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #ffe3e3;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .input-box:focus-within {
+            background: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-color: #ff8e8e;
+            transform: translateY(-2px);
         }
 
         input {
-            width: calc(100% - 20px);
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: transparent;
             outline: none;
-            transition: 0.3s;
+            font-size: 16px;
+            font-family: inherit;
+            color: #1e293b;
+            box-sizing: border-box;
         }
 
-        input:focus { border-color: var(--primary-color); box-shadow: 0 0 5px rgba(255,107,107,0.2); }
+        input::placeholder { color: #cbd5e1; }
 
+        /* 버튼 디자인 */
         button {
             width: 100%;
-            padding: 15px;
-            background: var(--primary-color);
+            padding: 18px;
+            background: var(--primary-grad);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 20px;
+            font-size: 17px;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
         }
 
-        button:hover { background: #ee5253; transform: translateY(-2px); }
-        button:disabled { background: #ccc; cursor: not-allowed; }
+        button:hover { 
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
 
-        #loading { display: none; margin: 20px 0; color: var(--primary-color); font-weight: bold; }
+        button:active { transform: scale(0.98); }
 
-        /* 결과 화면 디자인 */
+        /* 로딩 애니메이션 */
+        #loading { 
+            display: none; 
+            margin: 20px 0; 
+            color: #ff6b6b; 
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255,107,107,0.2);
+            border-top: 3px solid #ff6b6b;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 결과 영역 디자인 */
         #result-section {
             display: none;
-            animation: fadeIn 0.6s ease-in-out;
+            animation: slideUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .score-badge {
-            font-size: 50px;
-            font-weight: bold;
-            color: var(--primary-color);
+        .score-container {
+            position: relative;
+            display: inline-block;
             margin: 20px 0;
         }
 
-        .description {
-            line-height: 1.6;
-            color: #444;
-            background: #f1f3f5;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+        .score-badge {
+            font-size: 72px;
+            font-weight: 900;
+            background: var(--roast-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        .score-unit {
+            font-size: 20px;
+            color: #f5576c;
+            margin-left: 5px;
+        }
+
+        .description {
+            line-height: 1.7;
+            color: #334155;
+            background: white;
+            padding: 25px;
+            border-radius: 25px;
+            margin: 20px 0;
+            font-size: 17px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+            word-break: keep-all;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .btn-retry {
+            background: #f1f5f9;
+            color: #64748b;
+            box-shadow: none;
+            margin-top: 10px;
+        }
+        .btn-retry:hover { background: #e2e8f0; color: #475569; box-shadow: none; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>💕 궁합 탐지기</h1>
-    <p class="sub-text">당신과 최고의 궁합을 가진 사람을 찾아보세요!</p>
-
     <div id="input-section">
-        <div class="input-box">
-            <input type="text" id="nick1" placeholder="내 닉네임">
-            <input type="text" id="like1" placeholder="내가 좋아하는 것">
+        <h1>💕 Soulmate Matcher</h1>
+        <p class="sub-text">우리의 운명적인 궁합을 분석해볼까요?</p>
+
+        <div class="input-group">
+            <label>You</label>
+            <div class="input-box">
+                <input type="text" id="nick1" placeholder="닉네임 입력">
+                <input type="text" id="like1" placeholder="좋아하는 것 (예: 코딩, 여행)">
+            </div>
         </div>
-        <div class="input-box">
-            <input type="text" id="nick2" placeholder="상대방 닉네임">
-            <input type="text" id="like2" placeholder="상대방이 좋아하는 것">
+
+        <div class="input-group">
+            <label>Partner</label>
+            <div class="input-box">
+                <input type="text" id="nick2" placeholder="상대방 닉네임">
+                <input type="text" id="like2" placeholder="상대방 취향">
+            </div>
         </div>
-        <div id="loading">✨ 제미나이가 분석 중...</div>
-        <button id="submit-btn" onclick="startAnalysis()">분석 시작!</button>
+
+        <div id="loading">
+            <div class="spinner"></div>
+            <span>GPT가 우주의 기운을 모으는 중...</span>
+        </div>
+
+        <button id="submit-btn" onclick="startAnalysis()">운명 확인하기</button>
     </div>
 
     <div id="result-section">
-        <div class="score-badge"><span id="res-score">0</span>점</div>
-        <p class="description" id="res-desc"></p>
-        <button onclick="location.reload()" style="background: #6c757d;">다시 하기</button>
+        <p style="font-weight: 800; color: #94a3b8; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">Matching Score</p>
+        <div class="score-container">
+            <span class="score-badge" id="res-score">0</span><span class="score-unit">점</span>
+        </div>
+        <div class="description" id="res-desc"></div>
+        <button class="btn-retry" onclick="location.reload()">다시 분석하기</button>
     </div>
 </div>
 
 <script>
-    // ⚠️ 중요: 아래 URL을 본인의 Google Apps Script 배포 URL(/exec로 끝나는 것)로 교체하세요!
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0isffsx0ch3WpPC3u33gMLv4W0NxW1FTj4a1ZbZ_KtuG9Px-AfPafiUmws837QFgA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPbcmM39Duhj7y6rgJkW3B1Yv6d6jWSDSH-t3Qe_TPEGg3mEpOs9DqvBGTbF-Z-xr5/exec";
 
     async function startAnalysis() {
         const nick1 = document.getElementById('nick1').value;
@@ -140,41 +253,31 @@
         const loading = document.getElementById('loading');
 
         if (!nick1 || !like1 || !nick2 || !like2) {
-            alert("모든 빈칸을 입력해주세요!");
+            alert("모든 빈칸을 채워주셔야 운명을 읽을 수 있어요!");
             return;
         }
 
-        // 상태 업데이트
-        btn.disabled = true;
+        btn.style.display = 'none';
         loading.style.display = 'block';
 
-        const payload = {
-            nick1: nick1,
-            like1: like1,
-            nick2: nick2,
-            like2: like2
-        };
-
         try {
-            // 구글 앱스 스크립트로 데이터 전송
             const response = await fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ nick1, like1, nick2, like2 })
             });
 
             const result = await response.json();
 
-            // 결과 화면 표시
             document.getElementById('input-section').style.display = 'none';
             document.getElementById('result-section').style.display = 'block';
             
             document.getElementById('res-score').innerText = result.score;
-            document.getElementById('res-desc').innerText = result.description;
+            document.getElementById('res-desc').innerText = `"${result.description}"`;
 
         } catch (error) {
             console.error("Error:", error);
-            alert("데이터를 가져오는 데 실패했습니다. Apps Script 배포 설정(모든 사용자 권한)을 확인해주세요.");
-            btn.disabled = false;
+            alert("연결에 실패했습니다. API 키나 배포 상태를 확인해주세요.");
+            btn.style.display = 'block';
             loading.style.display = 'none';
         }
     }
